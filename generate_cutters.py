@@ -52,125 +52,160 @@ def make_cookie_cutter(outline_pts, wall_thickness, height, filename):
 
 
 # ---------------------------------------------------------------------------
-# 1. PEACE / VICTORY HAND  (completely redrawn)
+# 1. PEACE / VICTORY HAND  (v3 — compact, realistic proportions)
 # ---------------------------------------------------------------------------
-# Two clearly separated fingers (index + middle) in a V shape.
-# Palm/wrist below with thumb bump on left, curled ring+pinky on right.
-# Overall: ~95mm wide x ~118mm tall.
-# Traced CCW starting at bottom-left of palm.
+# Design rationale:
+#   Previous version had 65mm-tall fingers on a 53mm palm (ratio 1.23:1)
+#   with only a 5mm-deep V notch and 29mm gap at tips → looked like bunny ears.
 #
-#  Layout (approximate):
-#   Index finger center  x ≈ 13  (left finger)
-#   Middle finger center x ≈ 64  (right finger, V spread)
-#   V notch bottom       at (42, 48)
-#   Palm base            x: 5 – 85
+#   This version:
+#     • Palm 50mm tall, fingers only 43mm above palm (ratio 0.86:1 — palm TALLER)
+#     • Each finger consistently 20mm wide (not tapering to a spike)
+#     • V notch 15mm deep (y=50 down to y=35) — clearly visible in plastic
+#     • Gap at tips 15mm — tight, recognizable peace sign
+#     • Mild 2mm lean per finger over 43mm height (~3° from vertical)
+#
+#   Overall bounding box: ~80mm wide × 93mm tall
+#
+#   Key x-positions:
+#     Palm base          x: 5 – 73  (68mm wide)
+#     Index finger base  x: 12 – 32  (center x=22, leans 2mm LEFT to tip)
+#     Middle finger base x: 43 – 63  (center x=53, leans 2mm RIGHT to tip)
+#     V notch bottom     (37, 35)    — 15mm below finger bases
 
 peace_hand = [
-    # ── Palm base (bottom, left to right) ──────────────────────────────────
-    (  5,  0),
-    ( 85,  0),
-    # ── Right side of palm / wrist (going up) ──────────────────────────────
-    ( 88,  6),
-    ( 90, 16),
-    ( 92, 26),
-    # Curled ring+pinky knuckle bulge on right
-    ( 93, 36),
-    ( 91, 46),
-    # ── Into middle-finger base (right side) ───────────────────────────────
-    ( 84, 50),
-    ( 78, 53),
-    # ── Middle finger — right edge going up ────────────────────────────────
-    ( 77, 60),
-    ( 75, 74),
-    ( 73, 90),
-    ( 71,104),
-    # ── Middle finger tip (sweeping right → left) ──────────────────────────
-    ( 69,112),
-    ( 65,116),
-    ( 60,118),
-    ( 55,116),
-    ( 51,112),
-    # ── Middle finger — left edge going down ───────────────────────────────
-    ( 49,104),
-    ( 48, 90),
-    ( 48, 74),
-    ( 49, 60),
-    ( 50, 53),
-    # ── V notch between the two fingers ────────────────────────────────────
-    ( 46, 50),
-    ( 42, 48),   # deepest point of the V gap
-    ( 38, 50),
-    # ── Index finger — right edge going up from V notch ────────────────────
-    ( 37, 53),
-    ( 35, 60),
-    ( 31, 74),
-    ( 28, 90),
-    ( 25,104),
-    # ── Index finger tip (sweeping right → left) ───────────────────────────
-    ( 22,112),
-    ( 17,116),
-    ( 13,118),
-    (  8,116),
-    (  4,112),
-    # ── Index finger — left edge going down ────────────────────────────────
-    (  2,104),
-    (  1, 90),
-    (  1, 74),
-    (  3, 60),
-    (  5, 53),
-    # ── Left side of palm (going down, with thumb bump) ────────────────────
-    (  3, 46),
+    # ── Palm base ───────────────────────────────────────────────────────────
+    (  5,  0),   # bottom-left
+    ( 73,  0),   # bottom-right
+
+    # ── Right palm wall (bulges for curled ring + pinky) ────────────────────
+    ( 76,  7),
+    ( 78, 17),
+    ( 79, 28),
+    ( 78, 38),
+    ( 75, 45),
+
+    # ── Transition to middle-finger right base ───────────────────────────────
+    ( 68, 49),
+    ( 63, 50),   # right edge of middle finger at base
+
+    # ── Middle finger — right side going up (leans 2mm right over 43mm) ─────
+    ( 64, 62),
+    ( 65, 74),
+    ( 65, 82),   # right edge at start of rounded cap
+
+    # ── Middle finger tip — semicircular cap (center x=55 at y=82) ──────────
+    ( 63, 87),
+    ( 59, 91),
+    ( 55, 93),   # tip apex
+    ( 51, 91),
+    ( 47, 87),
+    ( 45, 82),   # left edge at start of cap
+
+    # ── Middle finger — left side going down ────────────────────────────────
+    ( 44, 74),
+    ( 43, 62),
+    ( 43, 50),   # left edge of middle finger at base
+
+    # ── V notch — 15mm deep, 11mm wide at base ──────────────────────────────
+    # Goes from y=50 down to y=35 between the two finger bases.
+    ( 41, 47),
+    ( 40, 42),
+    ( 37, 35),   # deepest point (15mm below finger bases)
+    ( 34, 42),
+    ( 33, 47),
+    ( 32, 50),   # right edge of index finger at base
+
+    # ── Index finger — right side going up (leans 2mm left over 43mm) ───────
+    ( 31, 62),
+    ( 30, 74),
+    ( 30, 82),   # right edge at start of rounded cap
+
+    # ── Index finger tip — semicircular cap (center x=20 at y=82) ───────────
+    ( 28, 87),
+    ( 24, 91),
+    ( 20, 93),   # tip apex
+    ( 16, 91),
+    ( 12, 87),
+    ( 10, 82),   # left edge at start of cap
+
+    # ── Index finger — left side going down ─────────────────────────────────
+    ( 10, 74),
+    ( 11, 62),
+    ( 12, 50),   # left edge of index finger at base
+
+    # ── Left palm wall (thumb area, smooth curve) ───────────────────────────
+    (  7, 46),
     (  3, 36),
-    # Thumb knuckle bump on left
-    (  4, 26),
-    (  5, 16),
-    (  5,  6),
+    (  3, 26),
+    (  4, 16),
+    (  5,  7),
+    # polygon closes back to (5, 0)
 ]
 
 # ---------------------------------------------------------------------------
-# 2. SNEAKER / SHOE — Vans Old Skool side profile (facing right)
+# 2. SNEAKER / SHOE — Vans Old Skool side profile (facing right, heel left)
 # ---------------------------------------------------------------------------
-# Redrawn for a more accurate low-top silhouette.
-# Overall: ~128mm wide x ~72mm tall.
-# Key features:
-#   • thick flat sole with slight curve at heel and toe
-#   • squared toe box with modest height
-#   • low ankle collar with a slight dip toward the tongue
-#   • heel sits taller than the toe opening
+# Design rationale:
+#   Vans Old Skool is a flat-soled skate shoe. Key proportions:
+#     • Real shoe: ~290mm long × 110mm tall → ratio ≈ 2.6:1
+#     • Cookie cutter target: 130mm wide × 68mm tall → ratio ≈ 1.9:1
+#     • Sole is FLAT on the bottom (skate shoe, no heel elevation)
+#     • Sole thickness: 15mm at heel, tapers to 10mm at toe
+#     • Toe box: slightly squared, 38mm above sole
+#     • Ankle opening: distinctive dip — tongue at y=52, dips to y=46,
+#       then rises to heel collar at y=68
+#     • Heel back: nearly straight vertical wall
+#
+#   Traced CCW starting at the heel back bottom (0, 0).
+#   Heel is on the LEFT (x=0), toe points RIGHT (x≈130).
 
 sneaker = [
-    # ── Sole bottom — heel (left) to toe (right) ───────────────────────────
-    (  0, 14),   # heel bottom-left corner
-    (  2,  6),
-    (  8,  2),
-    ( 20,  0),
-    ( 65,  0),
-    (100,  0),
-    (115,  3),
-    (122,  8),
-    (126, 15),
+    # ── Heel back bottom corner (start) ────────────────────────────────────
+    (  0,  0),
+
+    # ── Sole bottom — flat, heel to toe (going right) ──────────────────────
+    (  4,  0),
+    ( 15,  0),
+    ( 60,  0),
+    (105,  0),
+    (120,  0),
+    (126,  3),
+    (130,  8),   # toe-bottom corner
+
     # ── Toe front wall (going up) ──────────────────────────────────────────
-    (128, 22),
-    (126, 30),
+    (132, 16),
+    (131, 26),
+    (129, 34),
+
     # ── Toe box top (going left) ───────────────────────────────────────────
-    (122, 37),
-    (110, 41),
-    # ── Mid upper going toward ankle ───────────────────────────────────────
-    ( 90, 44),
-    ( 72, 47),
-    # ── Tongue / instep dip ────────────────────────────────────────────────
-    ( 58, 49),
-    ( 50, 54),
-    ( 44, 61),
-    # ── Ankle collar (top of heel) ─────────────────────────────────────────
-    ( 36, 69),
-    ( 22, 72),
-    # ── Heel collar going down ─────────────────────────────────────────────
-    (  8, 70),
-    (  2, 64),
-    (  0, 52),
-    # ── Heel back wall going down ──────────────────────────────────────────
-    (  0, 30),
+    (125, 40),   # squared-off Vans toe box corner
+    (114, 44),
+
+    # ── Mid upper (going left, slopes gently upward toward ankle) ──────────
+    ( 92, 47),
+    ( 72, 50),
+
+    # ── Tongue (front of ankle opening — slightly elevated) ─────────────────
+    ( 58, 52),
+
+    # ── Ankle opening dip (the "U" notch between tongue and heel collar) ────
+    # Goes DOWN 6mm from tongue, creating a visible notch in the silhouette.
+    ( 47, 46),   # bottom of ankle opening notch
+
+    # ── Ankle rises steeply to heel collar ──────────────────────────────────
+    ( 36, 58),
+    ( 24, 64),
+    ( 14, 68),   # heel collar peak
+
+    # ── Heel collar curving down ────────────────────────────────────────────
+    (  4, 66),
+    (  0, 58),   # top of heel back wall
+
+    # ── Heel back wall (going straight down) ───────────────────────────────
+    (  0, 38),
+    (  0, 18),
+    # polygon closes back to (0, 0)
 ]
 
 # ---------------------------------------------------------------------------
