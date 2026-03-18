@@ -52,95 +52,97 @@ def make_cookie_cutter(outline_pts, wall_thickness, height, filename):
 
 
 # ---------------------------------------------------------------------------
-# 1. PEACE / VICTORY HAND  (v3 — compact, realistic proportions)
+# 1. PEACE / VICTORY HAND  (v4 — pixel-measured from reference photo)
 # ---------------------------------------------------------------------------
-# Design rationale:
-#   Previous version had 65mm-tall fingers on a 53mm palm (ratio 1.23:1)
-#   with only a 5mm-deep V notch and 29mm gap at tips → looked like bunny ears.
+# Photo pixel analysis (cookie ~505px wide, 710px tall → scale to 90mm wide):
+#   • Total bounding box: 90mm wide × 116mm tall  (ratio 1.29:1)
+#   • Palm: 70mm tall; fingers: 46mm above palm   (finger:palm = 0.66:1)
+#     ← palm is MUCH taller than fingers = compact hand, NOT bunny ears
+#   • Index finger: 24mm wide (center x=17 at base)
+#   • Middle finger: 27mm wide (center x=56 at base)
+#   • Gap between fingers: 13mm at base, 17mm at tips
+#   • V notch: 16mm deep — wide, unmistakable gap between fingers
+#   • THUMB: protrudes to x=0 at y=28 — 10mm left of palm base
+#     ← THE KEY DETAIL: thumb makes it a HAND, not bunny ears
+#   • Ring+pinky bump: extends to x=90 at y=20-32 on right
 #
-#   This version:
-#     • Palm 50mm tall, fingers only 43mm above palm (ratio 0.86:1 — palm TALLER)
-#     • Each finger consistently 20mm wide (not tapering to a spike)
-#     • V notch 15mm deep (y=50 down to y=35) — clearly visible in plastic
-#     • Gap at tips 15mm — tight, recognizable peace sign
-#     • Mild 2mm lean per finger over 43mm height (~3° from vertical)
-#
-#   Overall bounding box: ~80mm wide × 93mm tall
-#
-#   Key x-positions:
-#     Palm base          x: 5 – 73  (68mm wide)
-#     Index finger base  x: 12 – 32  (center x=22, leans 2mm LEFT to tip)
-#     Middle finger base x: 43 – 63  (center x=53, leans 2mm RIGHT to tip)
-#     V notch bottom     (37, 35)    — 15mm below finger bases
+#   Origin: thumb tip (x=0). Palm base left edge at x=10.
+#   Traced CCW starting at palm bottom-left.
 
 peace_hand = [
-    # ── Palm base ───────────────────────────────────────────────────────────
-    (  5,  0),   # bottom-left
-    ( 73,  0),   # bottom-right
+    # ── Palm base ────────────────────────────────────────────────────────────
+    ( 10,  0),   # bottom-left of palm (thumb is higher up the left side)
+    ( 85,  0),   # bottom-right of palm
 
-    # ── Right palm wall (bulges for curled ring + pinky) ────────────────────
-    ( 76,  7),
-    ( 78, 17),
-    ( 79, 28),
-    ( 78, 38),
-    ( 75, 45),
+    # ── Right palm wall — ring + pinky knuckle bumps ──────────────────────────
+    ( 88,  8),
+    ( 90, 20),   # ring-finger knuckle peak  ← rightmost point of cookie
+    ( 90, 32),   # pinky knuckle
+    ( 88, 44),
+    ( 84, 58),
+    ( 80, 66),
 
-    # ── Transition to middle-finger right base ───────────────────────────────
-    ( 68, 49),
-    ( 63, 50),   # right edge of middle finger at base
+    # ── Transition to middle-finger right base ────────────────────────────────
+    ( 74, 69),
+    ( 69, 70),   # right edge of middle finger at base (y=70)
 
-    # ── Middle finger — right side going up (leans 2mm right over 43mm) ─────
-    ( 64, 62),
-    ( 65, 74),
-    ( 65, 82),   # right edge at start of rounded cap
+    # ── Middle finger — right side (center x=56, leans 3mm right over 46mm) ──
+    ( 70, 82),
+    ( 71, 94),
+    ( 72,103),   # right edge at cap start
 
-    # ── Middle finger tip — semicircular cap (center x=55 at y=82) ──────────
-    ( 63, 87),
-    ( 59, 91),
-    ( 55, 93),   # tip apex
-    ( 51, 91),
-    ( 47, 87),
-    ( 45, 82),   # left edge at start of cap
+    # ── Middle finger tip cap — semicircle, center x=59, radius 13.5mm ───────
+    ( 71,108),
+    ( 68,113),
+    ( 59,116),   # tip apex
+    ( 50,113),
+    ( 47,108),
+    ( 46,103),   # left edge at cap start
 
-    # ── Middle finger — left side going down ────────────────────────────────
-    ( 44, 74),
-    ( 43, 62),
-    ( 43, 50),   # left edge of middle finger at base
+    # ── Middle finger — left side going down ─────────────────────────────────
+    ( 45, 94),
+    ( 44, 82),
+    ( 42, 70),   # left edge of middle finger at base
 
-    # ── V notch — 15mm deep, 11mm wide at base ──────────────────────────────
-    # Goes from y=50 down to y=35 between the two finger bases.
-    ( 41, 47),
-    ( 40, 42),
-    ( 37, 35),   # deepest point (15mm below finger bases)
-    ( 34, 42),
-    ( 33, 47),
-    ( 32, 50),   # right edge of index finger at base
+    # ── V notch — 16mm deep (y=70 down to y=54) ──────────────────────────────
+    ( 40, 67),
+    ( 38, 62),
+    ( 35, 54),   # deepest point of V
+    ( 32, 62),
+    ( 30, 67),
+    ( 29, 70),   # right edge of index finger at base
 
-    # ── Index finger — right side going up (leans 2mm left over 43mm) ───────
-    ( 31, 62),
-    ( 30, 74),
-    ( 30, 82),   # right edge at start of rounded cap
+    # ── Index finger — right side (center x=17, leans 3mm left over 46mm) ───
+    ( 28, 82),
+    ( 27, 94),
+    ( 26,103),   # right edge at cap start
 
-    # ── Index finger tip — semicircular cap (center x=20 at y=82) ───────────
-    ( 28, 87),
-    ( 24, 91),
-    ( 20, 93),   # tip apex
-    ( 16, 91),
-    ( 12, 87),
-    ( 10, 82),   # left edge at start of cap
+    # ── Index finger tip cap — semicircle, center x=14, radius 12mm ─────────
+    ( 25,108),
+    ( 21,113),
+    ( 14,116),   # tip apex
+    (  7,113),
+    (  3,108),
+    (  2,103),   # left edge at cap start
 
-    # ── Index finger — left side going down ─────────────────────────────────
-    ( 10, 74),
-    ( 11, 62),
-    ( 12, 50),   # left edge of index finger at base
+    # ── Index finger — left side going down ──────────────────────────────────
+    (  2, 94),
+    (  3, 82),
+    (  5, 70),   # left edge of index finger at base
 
-    # ── Left palm wall (thumb area, smooth curve) ───────────────────────────
-    (  7, 46),
-    (  3, 36),
-    (  3, 26),
-    (  4, 16),
-    (  5,  7),
-    # polygon closes back to (5, 0)
+    # ── Left palm wall — THUMB BUMP ──────────────────────────────────────────
+    # Thumb protrudes 10mm leftward at mid-palm height.
+    # This is the single most important feature that makes this look like a
+    # peace-sign HAND rather than two bunny ears.
+    (  4, 64),
+    (  3, 57),
+    (  2, 49),
+    (  1, 40),
+    (  0, 28),   # ← THUMB TIP — leftmost point of entire cookie (x=0)
+    (  1, 18),
+    (  4, 10),
+    (  8,  4),
+    # polygon closes back to (10, 0)
 ]
 
 # ---------------------------------------------------------------------------
